@@ -1,0 +1,237 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title}">Forex Account Information</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" th:href="@{/theme/massively-design/assets/css/main.css}" />
+    <noscript><link rel="stylesheet" th:href="@{/theme/massively-design/assets/css/noscript.css}" /></noscript>
+</head>
+<body class="is-preload">
+
+    <!-- Wrapper -->
+    <div id="wrapper" class="fade-in">
+
+        <!-- Header -->
+        <header id="header">
+            <a th:href="@{/}" class="logo">Homework Financial</a>
+        </header>
+
+        <!-- Nav -->
+        <nav id="nav">
+            <ul class="links">
+                <li><a th:href="@{/}">Main Page</a></li>
+                <li><a th:href="@{/soap}">SOAP - Currency Data</a></li>
+                <li class="active"><a th:href="@{/forex-account}">Forex Account</a></li>
+                <li><a th:href="@{/forex-actprice}">Forex Actual Price</a></li>
+                <li><a th:href="@{/forex-histprice}">Forex Historical Price</a></li>
+                <li><a th:href="@{/forex-open}">Forex Open Position</a></li>
+                <li><a th:href="@{/forex-pos}">Forex Positions</a></li>
+                <li><a th:href="@{/forex-close}">Forex Close Position</a></li>
+            </ul>
+            <ul class="icons">
+                <li><a href="#" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+            </ul>
+        </nav>
+
+        <!-- Main -->
+        <div id="main">
+
+            <!-- Account Information -->
+            <article class="post featured">
+                <header class="major">
+                    <h1>Forex Account Information</h1>
+                    <p>Your trading account details and current status</p>
+                </header>
+
+                <div class="row">
+                    <div class="col-6 col-12-small">
+                        <section class="box">
+                            <h3>Account Summary</h3>
+                            <div class="table-wrapper">
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Account ID</strong></td>
+                                            <td th:text="${accountInfo != null ? accountInfo.accountId : 'DEMO-123456789'}">DEMO-123456789</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Account Type</strong></td>
+                                            <td th:text="${accountInfo != null ? accountInfo.accountType : 'Demo Account'}">Demo Account</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Base Currency</strong></td>
+                                            <td th:text="${accountInfo != null ? accountInfo.baseCurrency : 'USD'}">USD</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Account Status</strong></td>
+                                            <td th:text="${accountInfo != null ? accountInfo.status : 'Active'}" style="color: green;">Active</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Created Date</strong></td>
+                                            <td th:text="${accountInfo != null ? accountInfo.createdDate : '2025-01-01'}">2025-01-01</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+                    </div>
+
+                    <div class="col-6 col-12-small">
+                        <section class="box">
+                            <h3>Balance Information</h3>
+                            <div class="table-wrapper">
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Account Balance</strong></td>
+                                            <td th:text="${accountInfo != null ? '$' + accountInfo.balance : '$100,000.00'}" style="color: blue; font-size: 1.2em;">$100,000.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>NAV (Net Asset Value)</strong></td>
+                                            <td th:text="${accountInfo != null ? '$' + accountInfo.nav : '$100,250.75'}">$100,250.75</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Unrealized P&L</strong></td>
+                                            <td th:text="${accountInfo != null ? '$' + accountInfo.unrealizedPL : '+$250.75'}" style="color: green;">+$250.75</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Margin Used</strong></td>
+                                            <td th:text="${accountInfo != null ? '$' + accountInfo.marginUsed : '$5,420.00'}">$5,420.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Margin Available</strong></td>
+                                            <td th:text="${accountInfo != null ? '$' + accountInfo.marginAvailable : '$94,830.75'}">$94,830.75</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+
+                <!-- Trading Statistics -->
+                <section class="box">
+                    <h3>Trading Statistics</h3>
+                    <div class="row">
+                        <div class="col-3 col-6-medium col-12-small">
+                            <div class="stat-box" style="text-align: center; padding: 1em; background: #f4f4f4; margin: 0.5em;">
+                                <h4>Total Trades</h4>
+                                <p th:text="${accountInfo != null ? accountInfo.totalTrades : '47'}" style="font-size: 2em; color: #333;">47</p>
+                            </div>
+                        </div>
+                        <div class="col-3 col-6-medium col-12-small">
+                            <div class="stat-box" style="text-align: center; padding: 1em; background: #e8f5e8; margin: 0.5em;">
+                                <h4>Winning Trades</h4>
+                                <p th:text="${accountInfo != null ? accountInfo.winningTrades : '28'}" style="font-size: 2em; color: green;">28</p>
+                            </div>
+                        </div>
+                        <div class="col-3 col-6-medium col-12-small">
+                            <div class="stat-box" style="text-align: center; padding: 1em; background: #f5e8e8; margin: 0.5em;">
+                                <h4>Losing Trades</h4>
+                                <p th:text="${accountInfo != null ? accountInfo.losingTrades : '19'}" style="font-size: 2em; color: red;">19</p>
+                            </div>
+                        </div>
+                        <div class="col-3 col-6-medium col-12-small">
+                            <div class="stat-box" style="text-align: center; padding: 1em; background: #e8f0ff; margin: 0.5em;">
+                                <h4>Win Rate</h4>
+                                <p th:text="${accountInfo != null ? accountInfo.winRate + '%' : '59.6%'}" style="font-size: 2em; color: blue;">59.6%</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Recent Activity -->
+                <section class="box">
+                    <h3>Recent Account Activity</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Type</th>
+                                    <th>Description</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>2025-10-26</td>
+                                    <td>Trade</td>
+                                    <td>EUR/USD Position Closed</td>
+                                    <td style="color: green;">+$125.50</td>
+                                </tr>
+                                <tr>
+                                    <td>2025-10-25</td>
+                                    <td>Trade</td>
+                                    <td>GBP/JPY Position Closed</td>
+                                    <td style="color: red;">-$75.25</td>
+                                </tr>
+                                <tr>
+                                    <td>2025-10-24</td>
+                                    <td>Trade</td>
+                                    <td>USD/CAD Position Opened</td>
+                                    <td>--</td>
+                                </tr>
+                                <tr>
+                                    <td>2025-10-23</td>
+                                    <td>Deposit</td>
+                                    <td>Account Funding</td>
+                                    <td style="color: blue;">+$10,000.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <ul class="actions special">
+                    <li><a th:href="@{/forex-open}" class="button primary">Open New Position</a></li>
+                    <li><a th:href="@{/forex-pos}" class="button">View All Positions</a></li>
+                </ul>
+            </article>
+
+        </div>
+
+        <!-- Footer -->
+        <footer id="footer">
+            <section class="split contact">
+                <section class="alt">
+                    <h3>Account Support</h3>
+                    <p>24/7 Customer Service<br />
+                    Available via Phone & Chat</p>
+                </section>
+                <section>
+                    <h3>Phone</h3>
+                    <p><a href="#">+36 1 234 5678</a></p>
+                </section>
+                <section>
+                    <h3>Email</h3>
+                    <p><a href="#">support@homework-financial.com</a></p>
+                </section>
+                <section>
+                    <h3>Social</h3>
+                    <ul class="icons alt">
+                        <li><a href="#" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+                    </ul>
+                </section>
+            </section>
+        </footer>
+
+        <!-- Copyright -->
+        <div id="copyright">
+            <ul><li>&copy; Homework Financial Services</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li></ul>
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <script th:src="@{/theme/massively-design/assets/js/jquery.min.js}"></script>
+    <script th:src="@{/theme/massively-design/assets/js/jquery.scrollex.min.js}"></script>
+    <script th:src="@{/theme/massively-design/assets/js/jquery.scrolly.min.js}"></script>
+    <script th:src="@{/theme/massively-design/assets/js/browser.min.js}"></script>
+    <script th:src="@{/theme/massively-design/assets/js/breakpoints.min.js}"></script>
+    <script th:src="@{/theme/massively-design/assets/js/util.js}"></script>
+    <script th:src="@{/theme/massively-design/assets/js/main.js}"></script>
+
+</body>
+</html>

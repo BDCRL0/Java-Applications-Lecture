@@ -1,0 +1,440 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title}">Forex - Open Position</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" th:href="@{/theme/massively-design/assets/css/main.css}" />
+    <noscript><link rel="stylesheet" th:href="@{/theme/massively-design/assets/css/noscript.css}" /></noscript>
+</head>
+<body class="is-preload">
+
+    <!-- Wrapper -->
+    <div id="wrapper" class="fade-in">
+
+        <!-- Header -->
+        <header id="header">
+            <a th:href="@{/}" class="logo">Homework Financial</a>
+        </header>
+
+        <!-- Nav -->
+        <nav id="nav">
+            <ul class="links">
+                <li><a th:href="@{/}">Main Page</a></li>
+                <li><a th:href="@{/soap}">SOAP - Currency Data</a></li>
+                <li><a th:href="@{/forex-account}">Forex Account</a></li>
+                <li><a th:href="@{/forex-actprice}">Forex Actual Price</a></li>
+                <li><a th:href="@{/forex-histprice}">Forex Historical Price</a></li>
+                <li class="active"><a th:href="@{/forex-open}">Forex Open Position</a></li>
+                <li><a th:href="@{/forex-pos}">Forex Positions</a></li>
+                <li><a th:href="@{/forex-close}">Forex Close Position</a></li>
+            </ul>
+            <ul class="icons">
+                <li><a href="#" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+            </ul>
+        </nav>
+
+        <!-- Main -->
+        <div id="main">
+
+            <!-- Open Position Form -->
+            <article class="post featured">
+                <header class="major">
+                    <h1>Open Trading Position</h1>
+                    <p>Execute new trades at market price with customizable parameters</p>
+                </header>
+
+                <form method="post" th:action="@{/forex-open/execute}" onsubmit="return validateForm()">
+                    <div class="row">
+                        <div class="col-6 col-12-small">
+                            <div class="field">
+                                <label for="instrument">Select Instrument</label>
+                                <select name="instrument" id="instrument" required onchange="updateCurrentPrice()">
+                                    <option value="">-- Select Currency Pair --</option>
+                                    <option th:each="instr : ${instruments}" 
+                                            th:value="${instr}" 
+                                            th:text="${instr}"
+                                            th:selected="${instr == selectedInstrument}">EUR_USD</option>
+                                </select>
+                            </div>
+
+                            <div class="field">
+                                <label for="quantity">Quantity (Units)</label>
+                                <input type="number" name="quantity" id="quantity" required 
+                                       min="-10000000" max="10000000" step="1000" 
+                                       placeholder="e.g., 100000 (Long) or -100000 (Short)" />
+                                <small>Positive: Long Position | Negative: Short Position</small>
+                            </div>
+
+                            <div class="field">
+                                <label for="orderType">Order Type</label>
+                                <select name="orderType" id="orderType" required>
+                                    <option value="MARKET">Market Order (Execute Immediately)</option>
+                                    <option value="LIMIT">Limit Order (Set Price)</option>
+                                    <option value="STOP">Stop Order (Set Trigger Price)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-6 col-12-small">
+                            <div class="field" id="limitPriceField" style="display: none;">
+                                <label for="limitPrice">Limit Price</label>
+                                <input type="number" name="limitPrice" id="limitPrice" step="0.00001" 
+                                       placeholder="Enter desired execution price" />
+                            </div>
+
+                            <div class="field" id="stopPriceField" style="display: none;">
+                                <label for="stopPrice">Stop Price</label>
+                                <input type="number" name="stopPrice" id="stopPrice" step="0.00001" 
+                                       placeholder="Enter trigger price" />
+                            </div>
+
+                            <div class="field">
+                                <label for="stopLoss">Stop Loss (Optional)</label>
+                                <input type="number" name="stopLoss" id="stopLoss" step="0.00001" 
+                                       placeholder="Automatic close price for losses" />
+                            </div>
+
+                            <div class="field">
+                                <label for="takeProfit">Take Profit (Optional)</label>
+                                <input type="number" name="takeProfit" id="takeProfit" step="0.00001" 
+                                       placeholder="Automatic close price for profits" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Current Market Info -->
+                    <section class="box" id="marketInfo" style="display: none;">
+                        <h4>Current Market Information</h4>
+                        <div class="row">
+                            <div class="col-4 col-12-small">
+                                <p><strong>Current Price:</strong> <span id="currentPrice">--</span></p>
+                            </div>
+                            <div class="col-4 col-12-small">
+                                <p><strong>Spread:</strong> <span id="spread">1.2 pips</span></p>
+                            </div>
+                            <div class="col-4 col-12-small">
+                                <p><strong>Margin Required:</strong> <span id="marginRequired">--</span></p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Order Summary -->
+                    <section class="box">
+                        <h4>Order Summary</h4>
+                        <div class="table-wrapper">
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Direction:</strong></td>
+                                        <td><span id="direction">Select quantity to see direction</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Position Size:</strong></td>
+                                        <td><span id="positionSize">--</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Estimated Margin:</strong></td>
+                                        <td><span id="estimatedMargin">--</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Risk/Reward:</strong></td>
+                                        <td><span id="riskReward">Set Stop Loss and Take Profit</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <ul class="actions">
+                        <li><input type="submit" value="Execute Order" class="primary" id="executeBtn" /></li>
+                        <li><input type="button" value="Reset Form" class="button" onclick="resetForm()" /></li>
+                    </ul>
+                </form>
+            </article>
+
+            <!-- Order Confirmation -->
+            <div th:if="${orderResult != null}">
+                <article class="post">
+                    <header class="major">
+                        <h2 th:text="${orderResult.success ? 'Order Executed Successfully!' : 'Order Failed'}"></h2>
+                    </header>
+
+                    <div th:if="${orderResult.success}" class="box" style="background: #e8f5e8; border-left: 5px solid green;">
+                        <h4>Trade Details</h4>
+                        <div class="table-wrapper">
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Trade ID:</strong></td>
+                                        <td th:text="${orderResult.tradeId}">12345</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Instrument:</strong></td>
+                                        <td th:text="${orderResult.instrument}">EUR_USD</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Quantity:</strong></td>
+                                        <td th:text="${orderResult.quantity}">100000</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Execution Price:</strong></td>
+                                        <td th:text="${orderResult.executionPrice}">1.0850</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Execution Time:</strong></td>
+                                        <td th:text="${orderResult.executionTime}">2025-10-26 10:30:15</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div th:if="${!orderResult.success}" class="box" style="background: #f5e8e8; border-left: 5px solid red;">
+                        <h4>Error Details</h4>
+                        <p th:text="${orderResult.errorMessage}">Insufficient margin available</p>
+                    </div>
+
+                    <ul class="actions special">
+                        <li><a th:href="@{/forex-pos}" class="button primary">View All Positions</a></li>
+                        <li><a th:href="@{/forex-open}" class="button">Open Another Position</a></li>
+                    </ul>
+                </article>
+            </div>
+
+            <!-- Trading Guidelines -->
+            <article class="post">
+                <header class="major">
+                    <h2>Trading Guidelines</h2>
+                </header>
+
+                <div class="row">
+                    <div class="col-6 col-12-small">
+                        <section class="box">
+                            <h4>Position Sizing</h4>
+                            <ul>
+                                <li><strong>Standard Lot:</strong> 100,000 units</li>
+                                <li><strong>Mini Lot:</strong> 10,000 units</li>
+                                <li><strong>Micro Lot:</strong> 1,000 units</li>
+                                <li><strong>Maximum:</strong> 10,000,000 units</li>
+                            </ul>
+                        </section>
+                    </div>
+                    <div class="col-6 col-12-small">
+                        <section class="box">
+                            <h4>Risk Management</h4>
+                            <ul>
+                                <li>Always set Stop Loss orders</li>
+                                <li>Consider Take Profit levels</li>
+                                <li>Risk no more than 2% per trade</li>
+                                <li>Monitor margin requirements</li>
+                            </ul>
+                        </section>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+
+        <!-- Footer -->
+        <footer id="footer">
+            <section class="split contact">
+                <section class="alt">
+                    <h3>Order Execution</h3>
+                    <p>Instant market execution<br />
+                    Advanced order types available</p>
+                </section>
+                <section>
+                    <h3>Risk Management</h3>
+                    <p>Automated Stop Loss/Take Profit<br />
+                    Real-time margin monitoring</p>
+                </section>
+                <section>
+                    <h3>Email</h3>
+                    <p><a href="#">trading@homework-financial.com</a></p>
+                </section>
+                <section>
+                    <h3>Social</h3>
+                    <ul class="icons alt">
+                        <li><a href="#" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+                    </ul>
+                </section>
+            </section>
+        </footer>
+
+        <!-- Copyright -->
+        <div id="copyright">
+            <ul><li>&copy; Homework Financial Services</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li></ul>
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <script th:src="@{/theme/massively-design/assets/js/jquery.min.js}"></script>
+    <script th:src="@{/theme/massively-design/assets/js/jquery.scrollex.min.js}"></script>
+    <script th:src="@{/theme/massively-design/assets/js/jquery.scrolly.min.js}"></script>
+    <script th:src="@{/theme/massively-design/assets/js/browser.min.js}"></script>
+    <script th:src="@{/theme/massively-design/assets/js/breakpoints.min.js}"></script>
+    <script th:src="@{/theme/massively-design/assets/js/util.js}"></script>
+    <script th:src="@{/theme/massively-design/assets/js/main.js}"></script>
+
+    <!-- Trading Form Scripts -->
+    <script>
+        // Mock current prices for different instruments
+        const currentPrices = {
+            'EUR_USD': 1.0850,
+            'GBP_USD': 1.2650,
+            'USD_JPY': 149.50,
+            'USD_CHF': 0.8750,
+            'AUD_USD': 0.6550,
+            'USD_CAD': 1.3650,
+            'NZD_USD': 0.5950,
+            'EUR_GBP': 0.8580,
+            'EUR_JPY': 162.25,
+            'GBP_JPY': 189.15
+        };
+
+        function updateCurrentPrice() {
+            const instrument = document.getElementById('instrument').value;
+            const marketInfo = document.getElementById('marketInfo');
+            const currentPriceSpan = document.getElementById('currentPrice');
+            
+            if (instrument && currentPrices[instrument]) {
+                marketInfo.style.display = 'block';
+                currentPriceSpan.textContent = currentPrices[instrument];
+                updateMarginRequired();
+            } else {
+                marketInfo.style.display = 'none';
+            }
+        }
+
+        function updateMarginRequired() {
+            const quantity = Math.abs(parseInt(document.getElementById('quantity').value) || 0);
+            const instrument = document.getElementById('instrument').value;
+            const marginRequiredSpan = document.getElementById('marginRequired');
+            const estimatedMarginSpan = document.getElementById('estimatedMargin');
+            
+            if (quantity > 0 && instrument && currentPrices[instrument]) {
+                // Assume 3.33% margin requirement (30:1 leverage)
+                const notionalValue = quantity * currentPrices[instrument];
+                const marginRequired = notionalValue * 0.0333;
+                
+                marginRequiredSpan.textContent = '$' + marginRequired.toFixed(2);
+                estimatedMarginSpan.textContent = '$' + marginRequired.toFixed(2);
+            } else {
+                marginRequiredSpan.textContent = '--';
+                estimatedMarginSpan.textContent = '--';
+            }
+        }
+
+        // Update direction and position size based on quantity
+        document.getElementById('quantity').addEventListener('input', function() {
+            const quantity = parseInt(this.value) || 0;
+            const directionSpan = document.getElementById('direction');
+            const positionSizeSpan = document.getElementById('positionSize');
+            
+            if (quantity > 0) {
+                directionSpan.textContent = 'Long (Buy)';
+                directionSpan.style.color = 'green';
+            } else if (quantity < 0) {
+                directionSpan.textContent = 'Short (Sell)';
+                directionSpan.style.color = 'red';
+            } else {
+                directionSpan.textContent = 'Select quantity to see direction';
+                directionSpan.style.color = 'inherit';
+            }
+            
+            positionSizeSpan.textContent = Math.abs(quantity).toLocaleString() + ' units';
+            updateMarginRequired();
+            updateRiskReward();
+        });
+
+        // Show/hide order type specific fields
+        document.getElementById('orderType').addEventListener('change', function() {
+            const orderType = this.value;
+            const limitPriceField = document.getElementById('limitPriceField');
+            const stopPriceField = document.getElementById('stopPriceField');
+            
+            limitPriceField.style.display = orderType === 'LIMIT' ? 'block' : 'none';
+            stopPriceField.style.display = orderType === 'STOP' ? 'block' : 'none';
+            
+            // Set required attribute
+            document.getElementById('limitPrice').required = orderType === 'LIMIT';
+            document.getElementById('stopPrice').required = orderType === 'STOP';
+        });
+
+        // Update risk/reward calculation
+        function updateRiskReward() {
+            const stopLoss = parseFloat(document.getElementById('stopLoss').value);
+            const takeProfit = parseFloat(document.getElementById('takeProfit').value);
+            const instrument = document.getElementById('instrument').value;
+            const riskRewardSpan = document.getElementById('riskReward');
+            
+            if (stopLoss && takeProfit && instrument && currentPrices[instrument]) {
+                const currentPrice = currentPrices[instrument];
+                const quantity = parseInt(document.getElementById('quantity').value) || 0;
+                
+                if (quantity > 0) { // Long position
+                    const risk = Math.abs(currentPrice - stopLoss);
+                    const reward = Math.abs(takeProfit - currentPrice);
+                    const ratio = reward / risk;
+                    riskRewardSpan.textContent = `1:${ratio.toFixed(2)} (Risk: ${risk.toFixed(5)}, Reward: ${reward.toFixed(5)})`;
+                } else if (quantity < 0) { // Short position
+                    const risk = Math.abs(stopLoss - currentPrice);
+                    const reward = Math.abs(currentPrice - takeProfit);
+                    const ratio = reward / risk;
+                    riskRewardSpan.textContent = `1:${ratio.toFixed(2)} (Risk: ${risk.toFixed(5)}, Reward: ${reward.toFixed(5)})`;
+                }
+            } else {
+                riskRewardSpan.textContent = 'Set Stop Loss and Take Profit';
+            }
+        }
+
+        // Add event listeners for stop loss and take profit
+        document.getElementById('stopLoss').addEventListener('input', updateRiskReward);
+        document.getElementById('takeProfit').addEventListener('input', updateRiskReward);
+
+        function validateForm() {
+            const instrument = document.getElementById('instrument').value;
+            const quantity = parseInt(document.getElementById('quantity').value);
+            
+            if (!instrument) {
+                alert('Please select an instrument');
+                return false;
+            }
+            
+            if (!quantity || quantity === 0) {
+                alert('Please enter a valid quantity (positive for Long, negative for Short)');
+                return false;
+            }
+            
+            if (Math.abs(quantity) < 1000) {
+                alert('Minimum position size is 1,000 units');
+                return false;
+            }
+            
+            return confirm('Are you sure you want to execute this order?');
+        }
+
+        function resetForm() {
+            document.getElementById('instrument').value = '';
+            document.getElementById('quantity').value = '';
+            document.getElementById('orderType').value = 'MARKET';
+            document.getElementById('limitPrice').value = '';
+            document.getElementById('stopPrice').value = '';
+            document.getElementById('stopLoss').value = '';
+            document.getElementById('takeProfit').value = '';
+            
+            document.getElementById('marketInfo').style.display = 'none';
+            document.getElementById('limitPriceField').style.display = 'none';
+            document.getElementById('stopPriceField').style.display = 'none';
+            
+            document.getElementById('direction').textContent = 'Select quantity to see direction';
+            document.getElementById('positionSize').textContent = '--';
+            document.getElementById('estimatedMargin').textContent = '--';
+            document.getElementById('riskReward').textContent = 'Set Stop Loss and Take Profit';
+        }
+    </script>
+
+</body>
+</html>

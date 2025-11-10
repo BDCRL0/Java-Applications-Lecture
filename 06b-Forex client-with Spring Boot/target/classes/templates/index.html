@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forex Trading Platform</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 100px 0;
+        }
+        .feature-card {
+            transition: transform 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-chart-line me-2"></i>Forex Trading Platform
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">Main</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="soapDropdown" role="button" data-bs-toggle="dropdown">
+                            SOAP Services
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/mnb-rates">Hungarian National Bank Rates</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="forexDropdown" role="button" data-bs-toggle="dropdown">
+                            Forex Trading
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/account_info_page">Account Info</a></li>
+                            <li><a class="dropdown-item" href="/actual_prices">Actual Prices</a></li>
+                            <li><a class="dropdown-item" href="/hist_prices">Historical Prices</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="/open_position">Open Position</a></li>
+                            <li><a class="dropdown-item" href="/positions_page">View Positions</a></li>
+                            <li><a class="dropdown-item" href="/close_position">Close Position</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container text-center">
+            <h1 class="display-4 fw-bold mb-4">Professional Forex Trading Platform</h1>
+            <p class="lead mb-4">Advanced trading tools with real-time market data and comprehensive position management</p>
+            <a href="/actual_prices" class="btn btn-light btn-lg me-3">
+                <i class="fas fa-chart-bar me-2"></i>Start Trading
+            </a>
+            <a href="/account_info_page" class="btn btn-outline-light btn-lg">
+                <i class="fas fa-user me-2"></i>Account Info
+            </a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row text-center mb-5">
+                <div class="col">
+                    <h2 class="display-5 fw-bold">Trading Features</h2>
+                    <p class="lead text-muted">Comprehensive tools for professional forex trading</p>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card h-100 feature-card border-0 shadow">
+                        <div class="card-body text-center p-4">
+                            <div class="mb-3">
+                                <i class="fas fa-chart-line fa-3x text-primary"></i>
+                            </div>
+                            <h4>Real-time Pricing</h4>
+                            <p class="text-muted">Get live market prices for major currency pairs with instant updates</p>
+                            <a href="/actual_prices" class="btn btn-outline-primary">View Prices</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 feature-card border-0 shadow">
+                        <div class="card-body text-center p-4">
+                            <div class="mb-3">
+                                <i class="fas fa-history fa-3x text-success"></i>
+                            </div>
+                            <h4>Historical Data</h4>
+                            <p class="text-muted">Access comprehensive historical price data with multiple timeframes</p>
+                            <a href="/hist_prices" class="btn btn-outline-success">View History</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 feature-card border-0 shadow">
+                        <div class="card-body text-center p-4">
+                            <div class="mb-3">
+                                <i class="fas fa-exchange-alt fa-3x text-warning"></i>
+                            </div>
+                            <h4>Position Management</h4>
+                            <p class="text-muted">Open, monitor, and close trading positions with advanced controls</p>
+                            <a href="/open_position" class="btn btn-outline-warning">Start Trading</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SOAP Services Section -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h3 class="fw-bold mb-4">External Data Services</h3>
+                    <p class="text-muted mb-4">Integrate with external financial data providers for comprehensive market analysis</p>
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-university fa-2x text-primary me-3"></i>
+                        <div>
+                            <h5 class="mb-1">Hungarian National Bank</h5>
+                            <p class="text-muted mb-0">Access official exchange rates and historical data</p>
+                        </div>
+                    </div>
+                    <a href="/mnb-rates" class="btn btn-primary">
+                        <i class="fas fa-external-link-alt me-2"></i>Access MNB Data
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    <div class="text-center">
+                        <i class="fas fa-globe fa-5x text-primary opacity-25"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-4">
+        <div class="container text-center">
+            <div class="row">
+                <div class="col">
+                    <p class="mb-0">&copy; 2025 Forex Trading Platform. Professional trading solutions.</p>
+                    <p class="text-muted small">Powered by OANDA API and Spring Boot</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

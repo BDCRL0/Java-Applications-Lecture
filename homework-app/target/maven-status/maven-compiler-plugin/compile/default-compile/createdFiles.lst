@@ -1,0 +1,8 @@
+com\example\homework\model\CurrencyData.class
+com\example\homework\controller\ForexController.class
+com\example\homework\model\AccountInfo.class
+com\example\homework\service\ForexService.class
+com\example\homework\service\HungarianNationalBankService.class
+com\example\homework\controller\SoapController.class
+com\example\homework\controller\MainController.class
+com\example\homework\HomeworkApplication.class

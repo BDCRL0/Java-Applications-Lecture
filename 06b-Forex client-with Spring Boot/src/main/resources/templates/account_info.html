@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Information - Forex Trading Platform</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-chart-line me-2"></i>Forex Trading Platform
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/">
+                    <i class="fas fa-home me-1"></i>Home
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col">
+                <h2 class="fw-bold">
+                    <i class="fas fa-user-circle me-2 text-primary"></i>
+                    Account Information
+                </h2>
+                <p class="text-muted">Your trading account details and balance information</p>
+            </div>
+        </div>
+
+        <!-- Error Handling -->
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- Account Information Card -->
+        <div th:if="${account}" class="row">
+            <div class="col-lg-8">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-info-circle me-2"></i>Account Details
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="me-3">
+                                        <i class="fas fa-id-card fa-2x text-secondary"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1 text-muted">Account ID</h6>
+                                        <span class="fw-bold" th:text="${account.id}">Account ID</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="me-3">
+                                        <i class="fas fa-dollar-sign fa-2x text-success"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1 text-muted">Balance</h6>
+                                        <span class="fw-bold text-success" th:text="${account.balance} + ' ' + ${account.currency}">Balance</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="me-3">
+                                        <i class="fas fa-chart-bar fa-2x text-info"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1 text-muted">Unrealized P&L</h6>
+                                        <span class="fw-bold" th:classappend="${account.unrealizedPL >= 0} ? 'text-success' : 'text-danger'" 
+                                              th:text="${account.unrealizedPL} + ' ' + ${account.currency}">Unrealized P&L</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="me-3">
+                                        <i class="fas fa-percentage fa-2x text-warning"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1 text-muted">Margin Used</h6>
+                                        <span class="fw-bold" th:text="${account.marginUsed} + ' ' + ${account.currency}">Margin Used</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="me-3">
+                                        <i class="fas fa-shield-alt fa-2x text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1 text-muted">Margin Available</h6>
+                                        <span class="fw-bold" th:text="${account.marginAvailable} + ' ' + ${account.currency}">Margin Available</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="me-3">
+                                        <i class="fas fa-calculator fa-2x text-secondary"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1 text-muted">Margin Rate</h6>
+                                        <span class="fw-bold" th:text="${account.marginRate}">Margin Rate</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="col-lg-4">
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-bolt me-2"></i>Quick Actions
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <a href="/actual_prices" class="btn btn-primary">
+                                <i class="fas fa-chart-line me-2"></i>View Prices
+                            </a>
+                            <a href="/open_position" class="btn btn-success">
+                                <i class="fas fa-plus me-2"></i>Open Position
+                            </a>
+                            <a href="/positions_page" class="btn btn-info">
+                                <i class="fas fa-list me-2"></i>View Positions
+                            </a>
+                            <a href="/hist_prices" class="btn btn-secondary">
+                                <i class="fas fa-history me-2"></i>Historical Data
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Back Button -->
+        <div class="row mt-4">
+            <div class="col">
+                <a href="/" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

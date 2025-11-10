@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::body},'Forex - Open Positions')}">
+<body>
+
+<header>
+    <h1>Open Positions</h1>
+    <p>View all your currently open trading positions</p>
+</header>
+
+<section>
+    <div th:if="${error}" class="alert alert-danger">
+        <p th:text="${error}"></p>
+    </div>
+
+    <div th:if="${positions != null}">
+        <h3>Current Open Positions</h3>
+        <p><strong>Total Positions:</strong> <span th:text="${positions.totalPositions}"></span></p>
+        
+        <div th:if="${positions.trades != null and not #lists.isEmpty(positions.trades)}">
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Trade ID</th>
+                            <th>Instrument</th>
+                            <th>Direction</th>
+                            <th>Quantity</th>
+                            <th>Open Price</th>
+                            <th>Open Time</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="trade : ${positions.trades}">
+                            <td th:text="${trade.tradeId}"></td>
+                            <td th:text="${trade.instrument}"></td>
+                            <td th:text="${trade.direction}" 
+                                th:class="${trade.direction == 'LONG' ? 'text-success' : 'text-danger'}"></td>
+                            <td th:text="${trade.quantity}"></td>
+                            <td th:text="${#numbers.formatDecimal(trade.openPrice, 1, 5)}"></td>
+                            <td th:text="${trade.openTime}"></td>
+                            <td th:text="${trade.status}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div th:if="${positions.trades == null or #lists.isEmpty(positions.trades)}">
+            <div class="alert alert-info">
+                <p>No open positions found.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="actions">
+        <ul class="actions">
+            <li><a th:href="@{/forex-open}" class="button primary">Open New Position</a></li>
+            <li><a th:href="@{/forex-close}" class="button">Close Position</a></li>
+            <li><a th:href="@{/}" class="button">Back to Main</a></li>
+        </ul>
+    </div>
+</section>
+
+<style>
+.text-success {
+    color: #28a745 !important;
+}
+.text-danger {
+    color: #dc3545 !important;
+}
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+.alert-info {
+    color: #31708f;
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+}
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+</style>
+
+</body>
+</html>

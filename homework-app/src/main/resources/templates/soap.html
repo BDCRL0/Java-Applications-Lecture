@@ -1,0 +1,209 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title}">Hungarian National Bank - Currency Data</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" th:href="@{/theme/massively-design/assets/css/main.css}" />
+    <noscript><link rel="stylesheet" th:href="@{/theme/massively-design/assets/css/noscript.css}" /></noscript>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="is-preload">
+
+    <!-- Wrapper -->
+    <div id="wrapper" class="fade-in">
+
+        <!-- Header -->
+        <header id="header">
+            <a th:href="@{/}" class="logo">Homework Financial</a>
+        </header>
+
+        <!-- Nav -->
+        <nav id="nav">
+            <ul class="links">
+                <li><a th:href="@{/}">Main Page</a></li>
+                <li class="active"><a th:href="@{/soap}">SOAP - Currency Data</a></li>
+                <li><a th:href="@{/forex-account}">Forex Account</a></li>
+                <li><a th:href="@{/forex-actprice}">Forex Actual Price</a></li>
+                <li><a th:href="@{/forex-histprice}">Forex Historical Price</a></li>
+                <li><a th:href="@{/forex-open}">Forex Open Position</a></li>
+                <li><a th:href="@{/forex-pos}">Forex Positions</a></li>
+                <li><a th:href="@{/forex-close}">Forex Close Position</a></li>
+            </ul>
+            <ul class="icons">
+                <li><a href="#" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+            </ul>
+        </nav>
+
+        <!-- Main -->
+        <div id="main">
+
+            <!-- Currency Data Form -->
+            <article class="post featured">
+                <header class="major">
+                    <h1>Hungarian National Bank</h1>
+                    <h2>Currency Exchange Rates</h2>
+                    <p>Select currency and date range to view exchange rate data and charts</p>
+                </header>
+
+                <form method="post" th:action="@{/soap/fetch}">
+                    <div class="fields">
+                        <div class="field">
+                            <label for="currency">Currency</label>
+                            <select name="currency" id="currency">
+                                <option value="EUR">EUR - Euro</option>
+                                <option value="USD">USD - US Dollar</option>
+                                <option value="GBP">GBP - British Pound</option>
+                                <option value="CHF">CHF - Swiss Franc</option>
+                                <option value="JPY">JPY - Japanese Yen</option>
+                                <option value="PLN">PLN - Polish Zloty</option>
+                                <option value="CZK">CZK - Czech Koruna</option>
+                                <option value="RON">RON - Romanian Leu</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label for="startDate">Start Date</label>
+                            <input type="date" name="startDate" id="startDate" required />
+                        </div>
+                        <div class="field">
+                            <label for="endDate">End Date</label>
+                            <input type="date" name="endDate" id="endDate" required />
+                        </div>
+                    </div>
+                    <ul class="actions">
+                        <li><input type="submit" value="Fetch Currency Data" class="primary" /></li>
+                    </ul>
+                </form>
+            </article>
+
+            <!-- Results Section -->
+            <div th:if="${currencyData != null and !currencyData.empty}">
+                <article class="post">
+                    <header class="major">
+                        <h2>Exchange Rate Data</h2>
+                        <p th:text="'Currency: ' + ${selectedCurrency} + ' | Period: ' + ${startDate} + ' - ' + ${endDate}"></p>
+                    </header>
+
+                    <!-- Data Table -->
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Currency</th>
+                                    <th>Rate (HUF)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="data : ${currencyData}">
+                                    <td th:text="${data.date}">Date</td>
+                                    <td th:text="${data.currency}">Currency</td>
+                                    <td th:text="${data.rate}">Rate</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Chart -->
+                    <div style="width: 100%; height: 400px; margin-top: 2em;">
+                        <canvas id="currencyChart"></canvas>
+                    </div>
+                </article>
+            </div>
+
+            <!-- Error Message -->
+            <div th:if="${error != null}" class="post">
+                <header class="major">
+                    <h2>Error</h2>
+                    <p th:text="${error}" style="color: red;"></p>
+                </header>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <footer id="footer">
+            <section class="split contact">
+                <section class="alt">
+                    <h3>Data Source</h3>
+                    <p>Hungarian National Bank<br />
+                    Official Exchange Rates</p>
+                </section>
+                <section>
+                    <h3>Update Frequency</h3>
+                    <p>Daily at 11:30 AM CET</p>
+                </section>
+                <section>
+                    <h3>Email</h3>
+                    <p><a href="#">info@homework-financial.com</a></p>
+                </section>
+                <section>
+                    <h3>Social</h3>
+                    <ul class="icons alt">
+                        <li><a href="#" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+                    </ul>
+                </section>
+            </section>
+        </footer>
+
+        <!-- Copyright -->
+        <div id="copyright">
+            <ul><li>&copy; Homework Financial Services</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li></ul>
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <script th:src="@{/theme/massively-design/assets/js/jquery.min.js}"></script>
+    <script th:src="@{/theme/massively-design/assets/js/jquery.scrollex.min.js}"></script>
+    <script th:src="@{/theme/massively-design/assets/js/jquery.scrolly.min.js}"></script>
+    <script th:src="@{/theme/massively-design/assets/js/browser.min.js}"></script>
+    <script th:src="@{/theme/massively-design/assets/js/breakpoints.min.js}"></script>
+    <script th:src="@{/theme/massively-design/assets/js/util.js}"></script>
+    <script th:src="@{/theme/massively-design/assets/js/main.js}"></script>
+
+    <!-- Chart.js Script -->
+    <script th:if="${currencyData != null and !currencyData.empty}">
+        const ctx = document.getElementById('currencyChart').getContext('2d');
+        const currencyChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [/*[[${dates}]]*/ ],
+                datasets: [{
+                    label: /*[[${selectedCurrency}]]*/ + ' Exchange Rate (HUF)',
+                    data: [/*[[${rates}]]*/ ],
+                    borderColor: 'rgb(75, 192, 192)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        title: {
+                            display: true,
+                            text: 'Exchange Rate (HUF)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: /*[[${selectedCurrency}]]*/ + ' to HUF Exchange Rate'
+                    }
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

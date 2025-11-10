@@ -1,0 +1,1 @@
+Please unzip and follow instructions. The full scaffold was generated in the previous attempt. If missing, ask me to re-run generation in smaller pieces.

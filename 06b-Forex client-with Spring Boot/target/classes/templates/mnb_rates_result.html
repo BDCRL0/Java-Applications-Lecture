@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exchange Rate Results - Forex Trading Platform</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-light">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-chart-line me-2"></i>Forex Trading Platform
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/">
+                    <i class="fas fa-home me-1"></i>Home
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col">
+                <h2 class="fw-bold">
+                    <i class="fas fa-chart-area me-2 text-primary"></i>
+                    Exchange Rate Results
+                </h2>
+                <p class="text-muted">
+                    <span th:text="${currency}">Currency</span> rates from 
+                    <span th:text="${startDate}">Start Date</span> to 
+                    <span th:text="${endDate}">End Date</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Error Handling -->
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- Chart Section -->
+        <div th:if="${rates and !rates.isEmpty()}" class="row">
+            <div class="col-12">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-chart-line me-2"></i>
+                            <span th:text="${currency}">Currency</span> Exchange Rate Chart
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="exchangeRateChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Table -->
+        <div th:if="${rates and !rates.isEmpty()}" class="row">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-table me-2"></i>Exchange Rate Data
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th><i class="fas fa-calendar me-2"></i>Date</th>
+                                        <th><i class="fas fa-money-bill-wave me-2"></i>Rate (HUF)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="entry : ${rates}">
+                                        <td th:text="${entry.key}">Date</td>
+                                        <td class="fw-bold text-primary" th:text="${entry.value}">Rate</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Raw XML Data (Collapsible) -->
+        <div th:if="${xmlResult}" class="row mt-4">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link text-decoration-none p-0" type="button" data-bs-toggle="collapse" data-bs-target="#xmlData">
+                                <i class="fas fa-code me-2"></i>Raw XML Data
+                            </button>
+                        </h5>
+                    </div>
+                    <div class="collapse" id="xmlData">
+                        <div class="card-body">
+                            <pre class="bg-light p-3 rounded border" style="max-height: 300px; overflow-y: auto;"><code th:text="${xmlResult}">XML Data</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- No Data Message -->
+        <div th:if="${rates == null or rates.isEmpty()}" class="row">
+            <div class="col-12">
+                <div class="alert alert-warning text-center">
+                    <i class="fas fa-exclamation-circle fa-3x mb-3"></i>
+                    <h4>No exchange rate data found</h4>
+                    <p class="mb-0">Please try different dates or currency selection.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="row mt-4">
+            <div class="col">
+                <a href="/mnb-rates" class="btn btn-primary me-2">
+                    <i class="fas fa-redo me-2"></i>New Request
+                </a>
+                <a href="/" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Chart.js Script -->
+    <script th:if="${rates and !rates.isEmpty()}">
+        // Prepare data for Chart.js
+        const rates = /*[[${rates}]]*/ {};
+        const labels = Object.keys(rates).sort();
+        const data = labels.map(date => parseFloat(rates[date].replace(',', '.')));
+        const currency = /*[[${currency}]]*/ '';
+
+        // Create the chart
+        const ctx = document.getElementById('exchangeRateChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: currency + '/HUF Exchange Rate',
+                    data: data,
+                    borderColor: 'rgb(54, 162, 235)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: currency + '/HUF Exchange Rates'
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    x: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    },
+                    y: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Rate (HUF)'
+                        }
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
+                }
+            }
+        });
+    </script>
+</body>
+</html>

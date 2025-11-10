@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Position Opened - Forex Trading Platform</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-chart-line me-2"></i>Forex Trading Platform
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/">
+                    <i class="fas fa-home me-1"></i>Home
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- Success Header -->
+        <div class="row mb-4">
+            <div class="col text-center">
+                <div class="alert alert-success" role="alert">
+                    <h2 class="alert-heading">
+                        <i class="fas fa-check-circle me-2"></i>Position Opened Successfully!
+                    </h2>
+                    <p class="mb-0">Your trading position has been executed at market price.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Position Details -->
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-info-circle me-2"></i>Position Details
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <div class="d-flex align-items-center p-3 border rounded bg-light">
+                                    <div class="me-3">
+                                        <i class="fas fa-exchange-alt fa-2x text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1 text-muted">Instrument</h6>
+                                        <span class="fw-bold fs-5" th:text="${instr}">EUR_USD</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="d-flex align-items-center p-3 border rounded bg-light">
+                                    <div class="me-3">
+                                        <i class="fas fa-balance-scale fa-2x" 
+                                           th:classappend="${units > 0} ? 'text-success' : 'text-danger'"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1 text-muted">Position Size</h6>
+                                        <span class="fw-bold fs-5" 
+                                              th:classappend="${units > 0} ? 'text-success' : 'text-danger'"
+                                              th:text="${units} + ' units'">10000 units</span>
+                                        <small class="d-block text-muted" 
+                                               th:text="${units > 0} ? '(Long Position - Buy)' : '(Short Position - Sell)'"></small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="d-flex align-items-center p-3 border rounded bg-primary text-white">
+                                    <div class="me-3">
+                                        <i class="fas fa-hashtag fa-2x"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1">Trade Information</h6>
+                                        <span class="fw-bold fs-5" th:text="${id}">tradeId: 12345</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="row mt-4">
+            <div class="col text-center">
+                <div class="btn-group" role="group">
+                    <a href="/positions_page" class="btn btn-primary btn-lg">
+                        <i class="fas fa-list me-2"></i>View All Positions
+                    </a>
+                    <a href="/open_position" class="btn btn-success btn-lg">
+                        <i class="fas fa-plus me-2"></i>Open Another Position
+                    </a>
+                    <a href="/actual_prices" class="btn btn-info btn-lg">
+                        <i class="fas fa-chart-line me-2"></i>Check Prices
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Back to Dashboard -->
+        <div class="row mt-3">
+            <div class="col text-center">
+                <a href="/" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Positions - Forex Trading Platform</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-chart-line me-2"></i>Forex Trading Platform
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/">
+                    <i class="fas fa-home me-1"></i>Home
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <h2 class="fw-bold">
+                    <i class="fas fa-list me-2 text-primary"></i>
+                    Open Positions
+                </h2>
+                <p class="text-muted">Monitor and manage your active trading positions</p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <a href="/open_position" class="btn btn-success">
+                    <i class="fas fa-plus me-2"></i>Open New Position
+                </a>
+            </div>
+        </div>
+
+        <!-- Error Handling -->
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- Positions Table -->
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-table me-2"></i>Active Positions
+                </h5>
+            </div>
+            <div class="card-body p-0">
+                <div th:if="${trades != null and !trades.empty}" class="table-responsive">
+                    <table class="table table-striped table-hover mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th scope="col">
+                                    <i class="fas fa-hashtag me-1"></i>Trade ID
+                                </th>
+                                <th scope="col">
+                                    <i class="fas fa-exchange-alt me-1"></i>Instrument
+                                </th>
+                                <th scope="col">
+                                    <i class="fas fa-clock me-1"></i>Open Time
+                                </th>
+                                <th scope="col">
+                                    <i class="fas fa-balance-scale me-1"></i>Units
+                                </th>
+                                <th scope="col">
+                                    <i class="fas fa-dollar-sign me-1"></i>Price
+                                </th>
+                                <th scope="col">
+                                    <i class="fas fa-chart-bar me-1"></i>Unrealized P&L
+                                </th>
+                                <th scope="col">
+                                    <i class="fas fa-cogs me-1"></i>Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="trade : ${trades}">
+                                <td>
+                                    <span class="badge bg-secondary" th:text="${trade.id}">Trade ID</span>
+                                </td>
+                                <td>
+                                    <strong th:text="${trade.instrument}">EUR_USD</strong>
+                                </td>
+                                <td>
+                                    <small th:text="${#temporals.format(trade.openTime, 'yyyy-MM-dd HH:mm:ss')}">Open Time</small>
+                                </td>
+                                <td>
+                                    <span th:classappend="${trade.currentUnits > 0} ? 'text-success' : 'text-danger'"
+                                          th:text="${trade.currentUnits}">Units</span>
+                                    <small class="text-muted" th:text="${trade.currentUnits > 0} ? ' (Long)' : ' (Short)'"></small>
+                                </td>
+                                <td>
+                                    <span th:text="${trade.price}">Price</span>
+                                </td>
+                                <td>
+                                    <span th:classappend="${trade.unrealizedPL >= 0} ? 'text-success fw-bold' : 'text-danger fw-bold'"
+                                          th:text="${trade.unrealizedPL}">P&L</span>
+                                </td>
+                                <td>
+                                    <form th:action="@{/close_position}" method="post" class="d-inline">
+                                        <input type="hidden" name="tradeId" th:value="${trade.id}">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" 
+                                                onclick="return confirm('Are you sure you want to close this position?')">
+                                            <i class="fas fa-times me-1"></i>Close
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- No Positions Message -->
+                <div th:if="${trades == null or trades.empty}" class="text-center py-5">
+                    <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">No Open Positions</h5>
+                    <p class="text-muted">You don't have any active positions at the moment.</p>
+                    <a href="/open_position" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Open Your First Position
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Stats -->
+        <div th:if="${trades != null and !trades.empty}" class="row mt-4">
+            <div class="col-md-4">
+                <div class="card bg-info text-white">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">
+                            <i class="fas fa-list-ol me-2"></i>Total Positions
+                        </h5>
+                        <h3 th:text="${trades.size()}">0</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-success text-white">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">
+                            <i class="fas fa-arrow-up me-2"></i>Long Positions
+                        </h5>
+                        <h3 th:text="${trades.stream().filter(t -> t.currentUnits > 0).count()}">0</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-danger text-white">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">
+                            <i class="fas fa-arrow-down me-2"></i>Short Positions
+                        </h5>
+                        <h3 th:text="${trades.stream().filter(t -> t.currentUnits < 0).count()}">0</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Back Button -->
+        <div class="row mt-4">
+            <div class="col">
+                <a href="/" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

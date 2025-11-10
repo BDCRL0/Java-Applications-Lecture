@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::body},'Forex - Close Position')}">
+<body>
+
+<header>
+    <h1>Close Position</h1>
+    <p>Close an existing trading position by Trade ID</p>
+</header>
+
+<section>
+    <div th:if="${error}" class="alert alert-danger">
+        <p th:text="${error}"></p>
+    </div>
+
+    <div th:if="${closeResult}" class="alert alert-success">
+        <p th:text="${closeResult}"></p>
+    </div>
+
+    <form method="post" th:action="@{/forex-close/trade}">
+        <div class="fields">
+            <div class="field">
+                <label for="tradeId">Trade ID</label>
+                <input type="number" name="tradeId" id="tradeId" 
+                       th:value="${tradeId}" 
+                       placeholder="Enter Trade ID to close" 
+                       required />
+                <small>Enter the Trade ID of the position you want to close</small>
+            </div>
+        </div>
+        <ul class="actions">
+            <li><input type="submit" value="Close Position" class="primary" /></li>
+            <li><input type="reset" value="Reset" /></li>
+        </ul>
+    </form>
+
+    <div class="box">
+        <h3>Instructions</h3>
+        <p>To close a position:</p>
+        <ol>
+            <li>Go to <a th:href="@{/forex-pos}">Open Positions</a> to view your current trades</li>
+            <li>Note the Trade ID of the position you want to close</li>
+            <li>Enter the Trade ID in the field above</li>
+            <li>Click "Close Position" to execute the close order</li>
+        </ol>
+        <p><strong>Note:</strong> Once a position is closed, the action cannot be undone. The position will be closed at the current market price.</p>
+    </div>
+    
+    <div class="actions">
+        <ul class="actions">
+            <li><a th:href="@{/forex-pos}" class="button">View Open Positions</a></li>
+            <li><a th:href="@{/forex-open}" class="button">Open New Position</a></li>
+            <li><a th:href="@{/}" class="button">Back to Main</a></li>
+        </ul>
+    </div>
+</section>
+
+<style>
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+.box {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    padding: 2rem;
+    margin: 2rem 0;
+}
+.box h3 {
+    margin-top: 0;
+}
+</style>
+
+</body>
+</html>

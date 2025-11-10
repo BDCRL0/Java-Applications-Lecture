@@ -1,0 +1,217 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title}">Homework Financial Services</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" th:href="@{/theme/massively-design/assets/css/main.css}" />
+    <noscript><link rel="stylesheet" th:href="@{/theme/massively-design/assets/css/noscript.css}" /></noscript>
+</head>
+<body class="is-preload">
+
+    <!-- Wrapper -->
+    <div id="wrapper" class="fade-in">
+
+        <!-- Intro -->
+        <div id="intro">
+            <h1 th:text="${companyName}">Homework Financial Services</h1>
+            <p th:text="${companyDescription}">Your trusted partner in financial services and currency trading</p>
+            <ul class="actions">
+                <li><a href="#header" class="button icon solid solo fa-arrow-down scrolly">Continue</a></li>
+            </ul>
+        </div>
+
+        <!-- Header -->
+        <header id="header">
+            <a th:href="@{/}" class="logo">Homework Financial</a>
+        </header>
+
+        <!-- Nav -->
+        <nav id="nav">
+            <ul class="links">
+                <li class="active"><a th:href="@{/}">Main Page</a></li>
+                <li><a th:href="@{/soap}">SOAP - Currency Data</a></li>
+                <li><a th:href="@{/forex-account}">Forex Account</a></li>
+                <li><a th:href="@{/forex-actprice}">Forex Actual Price</a></li>
+                <li><a th:href="@{/forex-histprice}">Forex Historical Price</a></li>
+                <li><a th:href="@{/forex-open}">Forex Open Position</a></li>
+                <li><a th:href="@{/forex-pos}">Forex Positions</a></li>
+                <li><a th:href="@{/forex-close}">Forex Close Position</a></li>
+            </ul>
+            <ul class="icons">
+                <li><a href="#" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+            </ul>
+        </nav>
+
+        <!-- Main -->
+        <div id="main">
+
+            <!-- Featured Post -->
+            <article class="post featured">
+                <header class="major">
+                    <span class="date" th:text="${#dates.format(#dates.createNow(), 'MMMM dd, yyyy')}">October 26, 2025</span>
+                    <h2><a href="#">Welcome to<br />
+                    Homework Financial Services</a></h2>
+                    <p>We provide comprehensive financial services including currency exchange,<br />
+                    forex trading, and real-time market data analysis.<br />
+                    Experience professional trading with our advanced platform.</p>
+                </header>
+                <a href="#" class="image main"><img th:src="@{/theme/massively-design/images/pic01.jpg}" alt="Financial Services" /></a>
+                <ul class="actions special">
+                    <li><a th:href="@{/soap}" class="button large">Start Trading</a></li>
+                </ul>
+            </article>
+
+            <!-- Posts -->
+            <section class="posts">
+                <article>
+                    <header>
+                        <span class="date">Services</span>
+                        <h2><a th:href="@{/soap}">Currency Data<br />
+                        from Hungarian National Bank</a></h2>
+                    </header>
+                    <a th:href="@{/soap}" class="image fit"><img th:src="@{/theme/massively-design/images/pic02.jpg}" alt="Currency Data" /></a>
+                    <p>Access real-time and historical currency exchange rates from the Hungarian National Bank. 
+                       Visualize data with interactive charts and analyze market trends.</p>
+                    <ul class="actions special">
+                        <li><a th:href="@{/soap}" class="button">View Currency Data</a></li>
+                    </ul>
+                </article>
+                
+                <article>
+                    <header>
+                        <span class="date">Trading</span>
+                        <h2><a th:href="@{/forex-account}">Forex Account<br />
+                        Management</a></h2>
+                    </header>
+                    <a th:href="@{/forex-account}" class="image fit"><img th:src="@{/theme/massively-design/images/pic03.jpg}" alt="Account Management" /></a>
+                    <p>Manage your forex trading account with comprehensive tools. 
+                       View account information, balance, and trading history.</p>
+                    <ul class="actions special">
+                        <li><a th:href="@{/forex-account}" class="button">Account Info</a></li>
+                    </ul>
+                </article>
+                
+                <article>
+                    <header>
+                        <span class="date">Live Data</span>
+                        <h2><a th:href="@{/forex-actprice}">Real-time<br />
+                        Market Prices</a></h2>
+                    </header>
+                    <a th:href="@{/forex-actprice}" class="image fit"><img th:src="@{/theme/massively-design/images/pic04.jpg}" alt="Market Prices" /></a>
+                    <p>Get real-time market prices for major currency pairs. 
+                       Monitor live exchange rates and make informed trading decisions.</p>
+                    <ul class="actions special">
+                        <li><a th:href="@{/forex-actprice}" class="button">Live Prices</a></li>
+                    </ul>
+                </article>
+                
+                <article>
+                    <header>
+                        <span class="date">Analysis</span>
+                        <h2><a th:href="@{/forex-histprice}">Historical<br />
+                        Price Analysis</a></h2>
+                    </header>
+                    <a th:href="@{/forex-histprice}" class="image fit"><img th:src="@{/theme/massively-design/images/pic05.jpg}" alt="Historical Analysis" /></a>
+                    <p>Analyze historical price data with various timeframes. 
+                       View past performance and identify market patterns.</p>
+                    <ul class="actions special">
+                        <li><a th:href="@{/forex-histprice}" class="button">Historical Data</a></li>
+                    </ul>
+                </article>
+                
+                <article>
+                    <header>
+                        <span class="date">Trading</span>
+                        <h2><a th:href="@{/forex-open}">Open<br />
+                        Trading Positions</a></h2>
+                    </header>
+                    <a th:href="@{/forex-open}" class="image fit"><img th:src="@{/theme/massively-design/images/pic06.jpg}" alt="Open Positions" /></a>
+                    <p>Open new trading positions with our intuitive interface. 
+                       Choose instruments, set quantities, and execute trades.</p>
+                    <ul class="actions special">
+                        <li><a th:href="@{/forex-open}" class="button">Open Position</a></li>
+                    </ul>
+                </article>
+                
+                <article>
+                    <header>
+                        <span class="date">Portfolio</span>
+                        <h2><a th:href="@{/forex-pos}">Portfolio<br />
+                        Management</a></h2>
+                    </header>
+                    <a th:href="@{/forex-pos}" class="image fit"><img th:src="@{/theme/massively-design/images/pic07.jpg}" alt="Portfolio" /></a>
+                    <p>Monitor all your open positions in one place. 
+                       Track performance, profits, and losses in real-time.</p>
+                    <ul class="actions special">
+                        <li><a th:href="@{/forex-pos}" class="button">View Positions</a></li>
+                    </ul>
+                </article>
+            </section>
+
+        </div>
+
+        <!-- Footer -->
+        <footer id="footer">
+            <section>
+                <form method="post" action="#">
+                    <div class="fields">
+                        <div class="field">
+                            <label for="name">Name</label>
+                            <input type="text" name="name" id="name" />
+                        </div>
+                        <div class="field">
+                            <label for="email">Email</label>
+                            <input type="text" name="email" id="email" />
+                        </div>
+                        <div class="field">
+                            <label for="message">Message</label>
+                            <textarea name="message" id="message" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <ul class="actions">
+                        <li><input type="submit" value="Send Message" /></li>
+                    </ul>
+                </form>
+            </section>
+            <section class="split contact">
+                <section class="alt">
+                    <h3>Address</h3>
+                    <p>1234 Financial District<br />
+                    Budapest, Hungary</p>
+                </section>
+                <section>
+                    <h3>Phone</h3>
+                    <p><a href="#">+36 1 234 5678</a></p>
+                </section>
+                <section>
+                    <h3>Email</h3>
+                    <p><a href="#">info@homework-financial.com</a></p>
+                </section>
+                <section>
+                    <h3>Social</h3>
+                    <ul class="icons alt">
+                        <li><a href="#" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+                    </ul>
+                </section>
+            </section>
+        </footer>
+
+        <!-- Copyright -->
+        <div id="copyright">
+            <ul><li>&copy; Homework Financial Services</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li></ul>
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <script th:src="@{/theme/massively-design/assets/js/jquery.min.js}"></script>
+    <script th:src="@{/theme/massively-design/assets/js/jquery.scrollex.min.js}"></script>
+    <script th:src="@{/theme/massively-design/assets/js/jquery.scrolly.min.js}"></script>
+    <script th:src="@{/theme/massively-design/assets/js/browser.min.js}"></script>
+    <script th:src="@{/theme/massively-design/assets/js/breakpoints.min.js}"></script>
+    <script th:src="@{/theme/massively-design/assets/js/util.js}"></script>
+    <script th:src="@{/theme/massively-design/assets/js/main.js}"></script>
+
+</body>
+</html>
